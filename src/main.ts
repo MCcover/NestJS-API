@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
 
 require('dotenv').config();
 
@@ -11,7 +12,16 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.enableCors();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
+
+  app.enableCors({
+    credentials: true,
+  });
 
   app.use(helmet());
 

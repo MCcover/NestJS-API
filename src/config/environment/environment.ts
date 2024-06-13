@@ -14,8 +14,21 @@ export class Environment {
     public PORT: number;
     public VERSION: string;
 
+    public SUPABASE_URL: string;
+    public SUPABASE_SECRET_KEY: string;
+    public SUPABASE_JWT_SECRET: string;
+    public SIGNUP_REDIRECT_URL: string;
+    public JWT_SECRET: string;
+
     constructor() {
         this.PORT = parseInt(process.env.PORT);
         this.VERSION = process.env.VERSION;
+
+        this.JWT_SECRET = process.env.JWT_SECRET;
+
+        this.SUPABASE_URL = process.env.SUPABASE_URL;
+        this.SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
+        this.SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET;
+        this.SIGNUP_REDIRECT_URL = process.env.SIGNUP_REDIRECT_URL;
     }
 }
