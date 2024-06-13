@@ -29,8 +29,8 @@ async function bootstrap() {
   app.use(helmet());
 
   const config = new DocumentBuilder()
-    .setTitle('Coleccionalo Ya')
-    .setDescription('Coleccionalo Ya API')
+    .setTitle('My API')
+    .setDescription('My API Description')
     .setVersion(Environment.Instance.VERSION)
     .addBearerAuth(
       {

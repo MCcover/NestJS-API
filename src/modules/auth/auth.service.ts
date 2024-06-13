@@ -4,12 +4,10 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(private readonly supabase: SupabaseService) { }
 
   async login(authLoginDto: AuthLoginDto) {
-    const { data, error } = await this.supabase
-      .getClient()
-      .auth.signInWithPassword(authLoginDto);
+    const { data, error } = await this.supabase.getClient().auth.signInWithPassword(authLoginDto);
 
     if (error) throw new HttpException(error.message, error.status);
 
@@ -20,9 +18,7 @@ export class AuthService {
   }
 
   async logout(jwtToken: string) {
-    const { error } = await this.supabase
-      .getClient()
-      .auth.admin.signOut(jwtToken);
+    const { error } = await this.supabase.getClient().auth.admin.signOut(jwtToken);
 
     if (error) throw new HttpException(error.message, error.status);
   }
