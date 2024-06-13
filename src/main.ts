@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
@@ -23,6 +24,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.use(cookieParser());
+
   app.use(helmet());
 
   const config = new DocumentBuilder()
@@ -32,11 +35,16 @@ async function bootstrap() {
     .addBearerAuth(
       {
         type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
+        in: 'cookie',
         name: 'JWT',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
         description: 'Please insert JWT with Bearer into field.</br>Example: Bearer {JWT}',
-        in: 'header'
+        // type: 'http',
+        // scheme: 'bearer',
+        // bearerFormat: 'JWT',
+        // name: 'JWT',
+        // in: 'cookie'
       },
       'Bearear Authentication'
     )

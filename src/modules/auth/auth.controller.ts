@@ -16,7 +16,7 @@ import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  constructor(private readonly service: AuthService) { }
 
   @Post()
   @HttpCode(200)
@@ -29,8 +29,7 @@ export class AuthController {
     @Body() authLoginDto: AuthLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token } =
-      await this.service.login(authLoginDto);
+    const { access_token, refresh_token } = await this.service.login(authLoginDto);
 
     res.cookie('access_token', access_token, { httpOnly: true });
     res.cookie('refresh_token', refresh_token, { httpOnly: true });
