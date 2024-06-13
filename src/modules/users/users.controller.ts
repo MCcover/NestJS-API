@@ -13,11 +13,12 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserPayload } from 'src/common/decorators/user-payload.decorator';
 import { JwtUserPayload } from 'src/common/types/jwt-user-payload';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
-  constructor(private readonly service: UsersService) {}
+  constructor(private readonly service: UsersService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create user' })
