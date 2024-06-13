@@ -19,6 +19,17 @@ async function bootstrap() {
     .setTitle('Coleccionalo Ya')
     .setDescription('Coleccionalo Ya API')
     .setVersion(Environment.Instance.VERSION)
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Please insert JWT with Bearer into field.</br>Example: Bearer {JWT}',
+        in: 'header'
+      },
+      'Bearear Authentication'
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
