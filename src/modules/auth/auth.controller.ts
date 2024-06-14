@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SigninRequest } from './dto/signin/signin.request';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -9,6 +9,7 @@ import { SignupResponse } from './dto/signup/signup.response';
 import { SuccessResponse } from 'src/common/responses/success.response';
 import { ErrorResponse } from 'src/common/responses/error.response';
 import { SigninResponse } from './dto/signin/signin.response';
+import { CustomValidationPipe } from 'src/pipes/validation/validation.pipe';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -38,7 +39,7 @@ export class AuthController {
   }
 
   @Post('signin')
-  @HttpCode(200)
+  @UsePipes(new CustomValidationPipe())
   async signin(@Body() authLoginDto: SigninRequest, @Res({ passthrough: true }) res: Response): Promise<void> {
     try {
       const { access_token, refresh_token } = await this.service.login(authLoginDto);

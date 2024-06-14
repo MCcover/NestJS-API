@@ -3,8 +3,9 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
-import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import { CustomValidationPipe } from './pipes/validation/validation.pipe';
+import { ValidationPipe } from '@nestjs/common';
 
 require('dotenv').config();
 
@@ -14,10 +15,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
-    new ValidationPipe({
+    new CustomValidationPipe({
       transform: true,
       whitelist: true,
-    }),
+      dismissDefaultMessages: false,
+    })
   );
 
   app.enableCors({
