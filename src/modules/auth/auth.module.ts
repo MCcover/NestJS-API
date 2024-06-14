@@ -12,7 +12,7 @@ import { Environment } from 'src/config/environment/environment';
     JwtModule.registerAsync({
       useFactory: async () => ({
         secret: Environment.Instance.JWT_SECRET,
-      }),
+      })
     }),
   ],
   controllers: [AuthController],

@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { UsersModule } from './modules/users/users.module';
 import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
@@ -19,7 +18,6 @@ import { AuthModule } from './modules/auth/auth.module';
         limit: 20,
       }
     ]),
-    UsersModule,
     SupabaseModule,
     AuthModule,
   ],
