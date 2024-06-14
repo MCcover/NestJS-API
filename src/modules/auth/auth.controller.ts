@@ -1,35 +1,44 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Post,
-  Req,
-  Res,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthLoginDto } from './dto/auth-login.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { SigninRequest } from './dto/signin/signin.request';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request, Response } from 'express';
-import { ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { SignupRequest } from './dto/signup/signup.request';
+import { SignupResponse } from './dto/signup/signup.response';
+import { SuccessResponse } from 'src/common/responses/success.response';
+import { ErrorResponse } from 'src/common/responses/error.response';
 
 @Controller('auth')
-@ApiTags('Auth')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(private readonly service: AuthService) { }
 
-  @Post()
+  @Post('signup')
+  async signup(@Body() createUserDto: SignupRequest, @Res() res: Response): Promise<void> {
+
+    try {
+      var user = await this.service.create(createUserDto);
+      if (!user) {
+        throw new Error("Cannot create user");
+      }
+
+      res.status(HttpStatus.OK).json(
+        new SuccessResponse<SignupResponse>(HttpStatus.OK, "", {
+          status: "OK"
+        })
+      );
+
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
+      }
+    }
+  }
+
+  @Post('signin')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Sign in' })
-  @ApiResponse({
-    status: 200,
-    description: 'User authenticated.',
-  })
-  async login(
-    @Body() authLoginDto: AuthLoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async signin(@Body() authLoginDto: SigninRequest, @Res({ passthrough: true }) res: Response): Promise<void> {
     const { access_token, refresh_token } = await this.service.login(authLoginDto);
 
     res.cookie('access_token', access_token, { httpOnly: true });
@@ -37,15 +46,9 @@ export class AuthController {
   }
 
   @Post('logout')
-  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @ApiCookieAuth()
-  @ApiOperation({ summary: 'Sign out' })
-  @ApiResponse({
-    status: 200,
-    description: 'User successfully logged out .',
-  })
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
     const jwtToken = req.cookies.access_token;
     if (!jwtToken) throw new UnauthorizedException();
 
@@ -54,4 +57,5 @@ export class AuthController {
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
   }
+
 }

@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
@@ -54,7 +54,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/swagger', app, document);
 
   await app.listen(Environment.Instance.PORT, () => {
-    console.log(`http://localhost:${Environment.Instance.PORT}/api`);
+    console.log(`http://localhost:${Environment.Instance.PORT}/api/swagger`);
   });
 
 }
