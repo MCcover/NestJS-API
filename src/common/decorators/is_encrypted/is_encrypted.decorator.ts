@@ -1,5 +1,10 @@
-import { SetMetadata } from '@nestjs/common';
+import { PropertyDecoratorFactory } from '@loopback/metadata/dist/decorator-factory';
 
-export const IS_ENCRYPTED: string = "is_encrypted";
+export const IS_ENCRYPTED_KEY = 'isEncrypted';
 
-export const IsEncrypted = (): PropertyDecorator => SetMetadata(IS_ENCRYPTED, true);
+export function IsEncrypted(): PropertyDecorator {
+    return PropertyDecoratorFactory.createDecorator<boolean>(
+        IS_ENCRYPTED_KEY,
+        true,
+    );
+}

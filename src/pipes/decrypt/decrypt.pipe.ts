@@ -1,34 +1,30 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { IS_ENCRYPTED, IsEncrypted } from 'src/common/decorators/is_encrypted/is_encrypted.decorator';
+import { IS_ENCRYPTED_KEY } from 'src/common/decorators/is_encrypted/is_encrypted.decorator';
 import { CryptographyService } from 'src/modules/services/cryptography/cryptography.service';
+import { MetadataInspector } from '@loopback/metadata/dist/inspector';
 
 @Injectable()
 export class DecryptPipe implements PipeTransform {
 
-  constructor(private reflector: Reflector, private readonly cryptographyService: CryptographyService) {
+  constructor(private readonly cryptographyService: CryptographyService) {
 
   }
 
   async transform(value: any, metadata: ArgumentMetadata) {
-    // const keys = Object.keys(value);
 
-    // for (let i = 0; i < keys.length; i++) {
+    const allProps = MetadataInspector.getAllPropertyMetadata<boolean>(
+      IS_ENCRYPTED_KEY,
+      metadata.metatype.prototype,
+    );
 
-    //   const key = keys[i];
+    for (const prop in allProps) {
 
-    //   var m = Reflect.getMetadataKeys(value, key);
-    //   const isEncrypted = this.reflector.get<boolean>(IS_ENCRYPTED, metadata.metatype.prototype);
+      var text = value[prop];
 
+      value[prop] = await this.cryptographyService.decrypt(text);
 
-    //   console.log(`Decoradores de ${key}: `, m)
-    //   const mv = Reflect.getMetadata(IsEncrypted, value, key);
-
-    //   const x = 0;
-    //   // if (isEncrypted) {
-    //   //   value[key] = await this.cryptographyService.decrypt(value[key]);
-    //   // }
-    // }
+      const x = 0;
+    }
 
     return value;
   }
