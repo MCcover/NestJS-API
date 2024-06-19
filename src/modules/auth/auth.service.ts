@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { SupabaseService } from 'src/modules/supabase/supabase.service';
+import { SupabaseService } from 'src/modules/services/supabase/supabase.service';
 import { SigninRequest } from './dto/signin/signin.request';
 import { SignupRequest } from './dto/signup/signup.request';
 import { Environment } from 'src/config/environment/environment';

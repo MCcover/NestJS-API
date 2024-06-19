@@ -1,10 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, Scope } from '@nestjs/common';
 import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { SupabaseModule } from './modules/supabase/supabase.module';
+import { SupabaseModule } from './modules/services/supabase/supabase.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { FilesModule } from './modules/files/files.module';
+import { CryptographyModule } from './modules/services/cryptography/cryptography.module';
+import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
 
 @Module({
 
@@ -20,11 +23,17 @@ import { AuthModule } from './modules/auth/auth.module';
     ]),
     SupabaseModule,
     AuthModule,
+    FilesModule,
+    CryptographyModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: DecryptPipe,
     }
   ]
 })

@@ -8,7 +8,8 @@ import { Environment } from 'src/config/environment/environment';
 export class SupabaseService {
   private client: SupabaseClient;
 
-  constructor(@Inject(REQUEST) private readonly request: Request) { }
+  //constructor(@Inject(REQUEST) private readonly request: Request) { }
+  constructor() { }
 
   getClient() {
     if (this.client) return this.client;
@@ -20,4 +21,19 @@ export class SupabaseService {
     );
     return this.client;
   }
+
+  public async getTextFile(bucket: string, filename: string): Promise<string> {
+    const client = this.getClient();
+
+    const { data, error } = await client.storage.from(bucket).download(filename);
+
+    if (error) {
+      throw error;
+    }
+
+    const text = await data.text();
+
+    return text;
+  }
+
 }

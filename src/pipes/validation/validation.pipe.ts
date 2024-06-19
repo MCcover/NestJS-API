@@ -6,15 +6,15 @@ import { ErrorResponse } from 'src/common/responses/error.response';
 export class CustomValidationPipe extends ValidationPipe {
   createExceptionFactory(): (validationErrors?: ValidationError[]) => BadRequestException {
     return (validationErrors: ValidationError[] = []) => {
-      const message = this.flattenValidationErrors(validationErrors).join('; ');
+      const messages = this.flattenValidationErrors(validationErrors);
       return new BadRequestException(
-        new ErrorResponse(HttpStatus.BAD_REQUEST, 'Validation Error', message)
+        new ErrorResponse(HttpStatus.BAD_REQUEST, 'Validation Error', messages)
+
       );
     };
   }
 
   protected flattenValidationErrors(validationErrors: ValidationError[]): string[] {
-
     return validationErrors.map(error => {
       return Object.values(error.constraints);
     }).flat();

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, ParseIntPipe, Post, Req, Res, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SigninRequest } from './dto/signin/signin.request';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -14,13 +14,13 @@ import { CustomValidationPipe } from 'src/pipes/validation/validation.pipe';
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
-  constructor(private readonly service: AuthService) { }
+  constructor(private readonly authService: AuthService,) { }
 
   @Post('signup')
   async signup(@Body() createUserDto: SignupRequest, @Res() res: Response): Promise<void> {
 
     try {
-      var user = await this.service.create(createUserDto);
+      var user = await this.authService.create(createUserDto);
       if (!user) {
         throw new Error("Cannot create user");
       }
@@ -39,13 +39,12 @@ export class AuthController {
   }
 
   @Post('signin')
-  @UsePipes(new CustomValidationPipe())
   async signin(@Body() authLoginDto: SigninRequest, @Res({ passthrough: true }) res: Response): Promise<void> {
     try {
-      const { access_token, refresh_token } = await this.service.login(authLoginDto);
+      const { access_token, refresh_token } = await this.authService.login(authLoginDto);
 
-      res.cookie('access_token', access_token, { httpOnly: true });
-      res.cookie('refresh_token', refresh_token, { httpOnly: true });
+      res.cookie('access_token', access_token, { httpOnly: true, secure: true, sameSite: 'lax' });
+      res.cookie('refresh_token', refresh_token, { httpOnly: true, secure: true, sameSite: 'lax' });
 
       res.status(HttpStatus.OK).json(new SuccessResponse<SigninResponse>(HttpStatus.OK, "", {
         status: "OK"
@@ -65,7 +64,7 @@ export class AuthController {
       const jwtToken = req.cookies.access_token;
       if (!jwtToken) throw new UnauthorizedException();
 
-      await this.service.logout(jwtToken);
+      await this.authService.logout(jwtToken);
 
       res.clearCookie('access_token');
       res.clearCookie('refresh_token');

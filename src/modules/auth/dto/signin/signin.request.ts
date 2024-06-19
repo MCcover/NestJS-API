@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsStrongPassword, isStrongPassword } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
+import { IsEncrypted } from 'src/common/decorators/is_encrypted/is_encrypted.decorator';
 
 export class SigninRequest {
     @ApiProperty()
@@ -7,6 +8,7 @@ export class SigninRequest {
     email: string;
 
     @ApiProperty({ minLength: 8 })
+    @IsEncrypted()
     @IsString({ message: "PASSWORD_MUST_BE_STRING" })
     @IsNotEmpty({ message: "EMPTY_PASSWORD" })
     @IsStrongPassword(

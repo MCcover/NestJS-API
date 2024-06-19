@@ -5,7 +5,8 @@ import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { CustomValidationPipe } from './pipes/validation/validation.pipe';
-import { ValidationPipe } from '@nestjs/common';
+import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
+
 
 require('dotenv').config();
 
@@ -19,7 +20,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       dismissDefaultMessages: false,
-    })
+    }),
   );
 
   app.enableCors({
