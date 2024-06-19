@@ -22,8 +22,6 @@ export class DecryptPipe implements PipeTransform {
       var text = value[prop];
 
       value[prop] = await this.cryptographyService.decrypt(text);
-
-      const x = 0;
     }
 
     return value;
