@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SupabaseModule } from './modules/services/supabase/supabase.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
-import { CryptographyModule } from './modules/services/cryptography/cryptography.module';
+import { CryptographyModule } from './modules/cryptography/cryptography.module';
 import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
 
 @Module({
@@ -35,7 +35,7 @@ import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
       provide: APP_PIPE,
       useClass: DecryptPipe,
     }
-  ]
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

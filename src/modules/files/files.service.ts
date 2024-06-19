@@ -9,11 +9,15 @@ export class FilesService {
         return await this.fileService.getTextFile(bucket, filename);
     }
 
+    async getPublicRsaKey(): Promise<string> {
+        return (await this.getTextFile('keys', 'rsa_public.pem'));
+    }
+
     async getPrivateRsaKey(): Promise<string> {
-        return (await this.getTextFile('keys', 'rsa_private.pem')).replace(/(\r\n|\n|\r)/gm, "");
+        return (await this.getTextFile('keys', 'rsa_private.pem'));
     }
 
     async getSecretRsa(): Promise<string> {
-        return (await this.getTextFile('keys', 'secret.txt')).replace(/(\r\n|\n|\r)/gm, "");
+        return (await this.getTextFile('keys', 'secret.txt'));
     }
 }

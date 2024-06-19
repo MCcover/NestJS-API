@@ -1,6 +1,6 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { IS_ENCRYPTED_KEY } from 'src/common/decorators/is_encrypted/is_encrypted.decorator';
-import { CryptographyService } from 'src/modules/services/cryptography/cryptography.service';
+import { CryptographyService } from 'src/modules/cryptography/cryptography.service';
 import { MetadataInspector } from '@loopback/metadata/dist/inspector';
 
 @Injectable()
