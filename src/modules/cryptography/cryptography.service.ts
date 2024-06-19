@@ -36,9 +36,12 @@ export class CryptographyService {
                     key: privateRsaKey,
                     passphrase: secretRsa,
                 },
-                bufferEncrypted
+                bufferEncrypted,
             );
-            return bufferDecrypted.toString('utf8');
+
+            var decryptedText = bufferDecrypted.toString('utf8');
+
+            return decryptedText;
 
         } catch (error) {
             console.log("Ha ocurrido un error al desencriptar: ", error);
