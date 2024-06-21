@@ -3,7 +3,7 @@ import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { SupabaseModule } from './modules/services/supabase/supabase.module';
+import { SupabaseModule } from './services/supabase/supabase.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
 import { CryptographyModule } from './modules/cryptography/cryptography.module';

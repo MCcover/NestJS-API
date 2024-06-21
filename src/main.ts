@@ -5,7 +5,7 @@ import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { CustomValidationPipe } from './pipes/validation/validation.pipe';
-import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
+import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 
 
 require('dotenv').config();
@@ -14,6 +14,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.useGlobalPipes(
     new CustomValidationPipe({
@@ -30,6 +32,8 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.use(helmet());
+
+
 
   const config = new DocumentBuilder()
     .setTitle('My API')

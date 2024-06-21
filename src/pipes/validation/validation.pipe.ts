@@ -4,13 +4,10 @@ import { ErrorResponse } from 'src/common/responses/error.response';
 
 @Injectable()
 export class CustomValidationPipe extends ValidationPipe {
-  createExceptionFactory(): (validationErrors?: ValidationError[]) => BadRequestException {
+  createExceptionFactory(): (validationErrors?: ValidationError[]) => ErrorResponse {
     return (validationErrors: ValidationError[] = []) => {
       const messages = this.flattenValidationErrors(validationErrors);
-      return new BadRequestException(
-        new ErrorResponse(HttpStatus.BAD_REQUEST, 'Validation Error', messages)
-
-      );
+      return new ErrorResponse(HttpStatus.BAD_REQUEST, 'Validation Error', messages);
     };
   }
 

@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService,) { }
 
   @Post('signup')
-  async signup(@Body() createUserDto: SignupRequest, @Res() res: Response): Promise<void> {
+  async signup(@Body() createUserDto: SignupRequest): Promise<SignupResponse | ErrorResponse> {
 
     try {
       var user = await this.authService.create(createUserDto);
@@ -25,41 +25,39 @@ export class AuthController {
         throw new Error("Cannot create user");
       }
 
-      res.status(HttpStatus.OK).json(
-        new SuccessResponse<SignupResponse>(HttpStatus.OK, "", {
-          status: "OK"
-        })
-      );
+
+      return {
+        status: "OK"
+      };
 
     } catch (error) {
       if (error instanceof Error) {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
+        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message)
+        //res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
       }
     }
   }
 
   @Post('signin')
-  async signin(@Body() authLoginDto: SigninRequest, @Res({ passthrough: true }) res: Response): Promise<void> {
+  async signin(@Body() authLoginDto: SigninRequest, @Res() res: Response): Promise<SigninResponse | ErrorResponse> {
     try {
       const { access_token, refresh_token } = await this.authService.login(authLoginDto);
 
       res.cookie('access_token', access_token, { httpOnly: true, secure: true, sameSite: 'lax' });
       res.cookie('refresh_token', refresh_token, { httpOnly: true, secure: true, sameSite: 'lax' });
 
-      res.status(HttpStatus.OK).json(new SuccessResponse<SigninResponse>(HttpStatus.OK, "", {
+      return {
         status: "OK"
-      }));
+      };
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
-      }
+      return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message);
     }
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @ApiCookieAuth()
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void | ErrorResponse> {
     try {
       const jwtToken = req.cookies.access_token;
       if (!jwtToken) throw new UnauthorizedException();
@@ -70,9 +68,9 @@ export class AuthController {
       res.clearCookie('refresh_token');
     } catch (error) {
       if (error instanceof UnauthorizedException) {
-        res.status(HttpStatus.UNAUTHORIZED).json(new ErrorResponse(HttpStatus.UNAUTHORIZED, "", "UNAUTHORIZED"))
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED, "", "UNAUTHORIZED")
       } else if (error instanceof Error) {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message);
       }
     }
   }
