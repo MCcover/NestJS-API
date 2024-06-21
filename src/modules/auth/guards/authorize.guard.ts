@@ -3,10 +3,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { ErrorResponse } from 'src/common/responses/error.response';
 import { AuthUser } from '@supabase/supabase-js';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { Request, Response } from 'express';
 
-export const Authorize = (...permission: string[]): any => {
+export const Authorize = (...permissions: string[]): any => {
     @Injectable()
     class Authorize extends AuthGuard('jwt') {
         private readonly _errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "UNAUTHORIZED");
@@ -15,7 +15,7 @@ export const Authorize = (...permission: string[]): any => {
             super();
         }
 
-        canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+        async canActivate(context: ExecutionContext): Promise<boolean> {
             var http = context.switchToHttp();
 
             const request: Request = http.getRequest();
@@ -41,10 +41,12 @@ export const Authorize = (...permission: string[]): any => {
                 return false;
             }
 
-            if (permission.length > 0) {
+            if (permissions.length > 0) {
                 //TODO: implement obtaining user permissions and validation.
 
-                const hasPermission: boolean = true;
+                const userPermissions: string[] = await this.getUserPermissionsFromDatabase(payload.email);
+
+                const hasPermission: boolean = this.checkIfUserHasPermission(permissions, userPermissions);
 
                 if (!hasPermission) {
                     response.status(HttpStatus.UNAUTHORIZED).json(this._errorResponse);
@@ -52,10 +54,28 @@ export const Authorize = (...permission: string[]): any => {
                 }
             }
 
-            return super.canActivate(context);
+            const isValidUser = super.canActivate(context);
+
+            if (isValidUser instanceof Observable) {
+                return firstValueFrom(isValidUser);
+            }
+
+            return isValidUser;
         }
 
-    }
+        async getUserPermissionsFromDatabase(email: string): Promise<string[]> {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(['asd', 'write']);
+                }, 1000);
+            });
+        }
+
+        checkIfUserHasPermission(requiredPermissions: string[], userPermissions: string[]): boolean {
+            return requiredPermissions.some(permission => userPermissions.includes(permission));
+        }
+
+    };
     return mixin(Authorize);
 }
 
