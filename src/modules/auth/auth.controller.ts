@@ -52,7 +52,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  @UseGuards(Authorize)
+  @UseGuards(Authorize("admin", "user"))
   @ApiCookieAuth()
   async logout(@Req() req: Request, @Res() res: Response): Promise<void | ErrorResponse> {
     try {
