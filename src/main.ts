@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
-import { CustomValidationPipe } from './pipes/validation/validation.pipe';
+import { ErrorValidationPipe } from './pipes/errorValidation/errorValidation.pipe';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 
 
@@ -18,7 +18,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.useGlobalPipes(
-    new CustomValidationPipe({
+    new ErrorValidationPipe({
       transform: true,
       whitelist: true,
       dismissDefaultMessages: false,

@@ -1,15 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, ParseIntPipe, Post, Req, Res, UnauthorizedException, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SigninRequest } from './dto/signin/signin.request';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Authorize } from './guards/authorize.guard';
 import { Request, Response } from 'express';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { SignupRequest } from './dto/signup/signup.request';
 import { SignupResponse } from './dto/signup/signup.response';
-import { SuccessResponse } from 'src/common/responses/success.response';
 import { ErrorResponse } from 'src/common/responses/error.response';
 import { SigninResponse } from './dto/signin/signin.response';
-import { CustomValidationPipe } from 'src/pipes/validation/validation.pipe';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -33,7 +31,6 @@ export class AuthController {
     } catch (error) {
       if (error instanceof Error) {
         new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message)
-        //res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message))
       }
     }
   }
@@ -55,7 +52,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(Authorize)
   @ApiCookieAuth()
   async logout(@Req() req: Request, @Res() res: Response): Promise<void | ErrorResponse> {
     try {

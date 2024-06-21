@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable, catchError, map, retry } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { ErrorResponse } from 'src/common/responses/error.response';
 import { SuccessResponse } from 'src/common/responses/success.response';
 

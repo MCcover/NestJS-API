@@ -3,7 +3,7 @@ import { ValidationOptions } from 'class-validator';
 import { ErrorResponse } from 'src/common/responses/error.response';
 
 @Injectable()
-export class CustomValidationPipe extends ValidationPipe {
+export class ErrorValidationPipe extends ValidationPipe {
   createExceptionFactory(): (validationErrors?: ValidationError[]) => ErrorResponse {
     return (validationErrors: ValidationError[] = []) => {
       const messages = this.flattenValidationErrors(validationErrors);
