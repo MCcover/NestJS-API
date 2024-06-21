@@ -1,73 +1,36 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<h1 align="center">
+  NEST-JS API TEMPLATE
+</h1>
 
 ## Description
+This is a template of an API developed in Nest-JS that uses Supabase to handle the registration and authentication of the users. Additionally, it uses Supabase's storage to store the RSA keys for use in the API.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+To start developing using this template, it is necessary to:
+- Have Node.js, pnpm, and Nest CLI installed.
+- Have a project in Supabase.
 
-## Installation
+## Configuration
+It is necessary to establish some basic configurations before starting with the development. The environment variables must be defined in an `.env` file. To make this task easier, we already provide an `.env.template` file which indicates all the necessary variables to define in the `.env` file.
 
-```bash
-$ pnpm install
-```
+Once the environment variables are set, at any time if you want to have access to their values, it is not necessary to use `process.env.{VARIABLE_NAME}`. Instead, the `config` folder already provides a handle to the environment variables. Accessing their values is as simple as running `Environment.Instance.{VARIABLE_NAME}`.
 
-## Running the app
-
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Features
+The template already has: 
+- A console logging middleware configured.
+- A validation error handling pipe.
+- A decryption pipe
+- A decorator to indicate which properties of a DTO are encrypted so that the decryption pipe can decrypt the content.
+- An interceptor to set the responses of the controllers.
+- An environment variable handler.
+- An authentication and authorization guard in which you can indicate a list of possible permissions that the user must have to be able to execute the request (having only one is considered valid).
+- Predefined controller responses: SuccessResponse and ErrorResponse.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+NEST-JS API TEMPLATE is [MIT licensed](LICENSE).
+</br>
+</br>
+</br>
