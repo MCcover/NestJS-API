@@ -27,6 +27,10 @@ The template already has:
 - An environment variable handler.
 - An authentication and authorization guard in which you can indicate a list of possible permissions that the user must have to be able to execute the request (having only one is considered valid).
 - Predefined controller responses: SuccessResponse and ErrorResponse.
+- Supabase Auth management module.
+- Supabase file management module.
+- Auth controller.
+- Encryption and decryption service.
 
 ## License
 
