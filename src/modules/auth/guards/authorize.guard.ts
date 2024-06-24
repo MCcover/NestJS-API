@@ -43,7 +43,7 @@ export const Authorize = (...permissions: string[]): any => {
 
             if (permissions.length > 0) {
 
-                var roles: string[] = payload["user_roles"];
+                var roles: string[] = payload["roles"];
 
                 const hasPermission: boolean = this.checkIfUserHasPermission(permissions, roles);
 

@@ -62,18 +62,19 @@ stable
 as $$
   declare
     claims jsonb;
-    user_role varchar;
+    user_roles jsonb;
   begin
-    -- Fetch the user role in the user_roles table
-    select role into user_role from public.user_roles where user_id = (event->>'user_id')::uuid;
+    -- Fetch the user roles in the user_roles table
+    select jsonb_agg(role) into user_roles from public.user_roles where user_id = (event->>'user_id')::uuid;
 
     claims := event->'claims';
 
-    if user_role is not null then
-      -- Set the claim
-      claims := jsonb_set(claims, '{user_role}', to_jsonb(user_role));
+    if user_roles is not null and jsonb_array_length(user_roles) > 0 then
+      -- Set the claim with the array of roles
+      claims := jsonb_set(claims, '{roles}', user_roles);
     else
-      claims := jsonb_set(claims, '{user_role}', to_jsonb('user'));
+      -- Set the claim with a default role
+      claims := jsonb_set(claims, '{roles}', to_jsonb(array['user']));
     end if;
 
     -- Update the 'claims' object in the original event
