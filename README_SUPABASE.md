@@ -73,7 +73,7 @@ as $$
       -- Set the claim
       claims := jsonb_set(claims, '{user_role}', to_jsonb(user_role));
     else
-      claims := jsonb_set(claims, '{user_role}', 'null');
+      claims := jsonb_set(claims, '{user_role}', to_jsonb('user'));
     end if;
 
     -- Update the 'claims' object in the original event
