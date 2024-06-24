@@ -43,9 +43,9 @@ export const Authorize = (...permissions: string[]): any => {
 
             if (permissions.length > 0) {
 
-                var role = payload["user_role"];
+                var roles: string[] = payload["user_roles"];
 
-                const hasPermission: boolean = this.checkIfUserHasPermission(permissions, [role]);
+                const hasPermission: boolean = this.checkIfUserHasPermission(permissions, roles);
 
                 if (!hasPermission) {
                     response.status(HttpStatus.UNAUTHORIZED).json(this._errorResponse);
