@@ -42,11 +42,10 @@ export const Authorize = (...permissions: string[]): any => {
             }
 
             if (permissions.length > 0) {
-                //TODO: implement obtaining user permissions and validation.
 
-                const userPermissions: string[] = await this.getUserPermissionsFromDatabase(payload.email);
+                var role = payload["user_role"];
 
-                const hasPermission: boolean = this.checkIfUserHasPermission(permissions, userPermissions);
+                const hasPermission: boolean = this.checkIfUserHasPermission(permissions, [role]);
 
                 if (!hasPermission) {
                     response.status(HttpStatus.UNAUTHORIZED).json(this._errorResponse);
@@ -61,14 +60,6 @@ export const Authorize = (...permissions: string[]): any => {
             }
 
             return isValidUser;
-        }
-
-        async getUserPermissionsFromDatabase(email: string): Promise<string[]> {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    resolve(['asd', 'write']);
-                }, 1000);
-            });
         }
 
         checkIfUserHasPermission(requiredPermissions: string[], userPermissions: string[]): boolean {
