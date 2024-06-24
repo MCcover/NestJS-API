@@ -8,6 +8,7 @@ import { SignupRequest } from './dto/signup/signup.request';
 import { SignupResponse } from './dto/signup/signup.response';
 import { ErrorResponse } from 'src/common/responses/error.response';
 import { SigninResponse } from './dto/signin/signin.response';
+import { ROLES } from 'src/common/constants/auth.constants';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -52,7 +53,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  //@UseGuards(Authorize("admin", "user"))
+  //@UseGuards(Authorize(ROLES.USER, ROLES.ADMIN))
   @ApiCookieAuth()
   async logout(@Req() req: Request, @Res() res: Response): Promise<void | ErrorResponse> {
     try {
