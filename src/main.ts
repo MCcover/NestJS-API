@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Environment } from './config/environment/environment';
 import helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { ErrorValidationPipe } from './pipes/errorValidation/errorValidation.pipe';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
 
