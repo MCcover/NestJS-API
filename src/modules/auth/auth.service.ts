@@ -3,6 +3,7 @@ import { SupabaseService } from 'src/modules/services/supabase/supabase.service'
 import { SigninRequest } from './dto/signin/signin.request';
 import { SignupRequest } from './dto/signup/signup.request';
 import { Environment } from 'src/config/environment/environment';
+import { AuthResponse } from '@supabase/supabase-js';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,10 @@ export class AuthService {
     const { error } = await this.authService.getClient().auth.admin.signOut(jwtToken);
 
     if (error) throw new HttpException(error.message, error.status);
+  }
+
+  async refresh(jwtRefresh: string): Promise<AuthResponse> {
+    return this.authService.getClient().auth.refreshSession({ refresh_token: jwtRefresh });
   }
 
   async create(createUserDto: SignupRequest) {

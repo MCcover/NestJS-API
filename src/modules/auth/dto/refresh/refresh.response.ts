@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class SigninResponse {
+export class RefreshResponse {
     @ApiProperty()
     status: string;
 
