@@ -120,3 +120,17 @@ grant usage on schema public to supabase_auth_admin;
 
 Once you have created the function for the hook, go to `Authentication -> Hooks -> Add Hook` and associate the function to `Customize Access Token (JWT) Claims hook`.
 and associate the function to `Customize Access Token (JWT) Claims hook`.
+
+## Create RSA Keys
+
+### Create private key RSA
+```
+openssl genpkey -algorithm RSA -aes256 -out rsa_private.pem -pass pass:YourSecretPass -pkeyopt rsa_keygen_bits:2048
+```
+
+### Create Public key RSA
+```
+openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem -passin pass:YourSecretPass
+```
+
+Create a Bucket in Supabase named `keys` and add the generated `.pem` files in there
