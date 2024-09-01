@@ -28,7 +28,7 @@ export class AuthController {
       return new SigninResponse("OK");
     } catch (error) {
       if (error instanceof Error) {
-        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message)
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message)
       }
     }
   }
