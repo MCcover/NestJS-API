@@ -10,6 +10,7 @@ import { SigninResponse } from './dto/signin/signin.response';
 import { RefreshResponse } from './dto/refresh/refresh.response';
 import { Authorize } from './guards/authorize.guard';
 import { ROLES } from 'src/common/constants/auth.constants';
+import { LogoutResponse } from './dto/logout/logout.response';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -94,8 +95,9 @@ export class AuthController {
 
   @Post('logout')
   //@UseGuards(Authorize(ROLES.USER, ROLES.ADMIN))
+  @UseGuards(Authorize())
   @ApiCookieAuth()
-  async logout(@Req() req: Request, @Res() res: Response): Promise<void | ErrorResponse> {
+  async logout(@Req() req: Request, @Res() res: Response): Promise<LogoutResponse | ErrorResponse> {
     try {
       if (req.cookies) {
         const jwtToken = req.cookies.access_token;
@@ -105,6 +107,7 @@ export class AuthController {
       }
 
       this.clearCookies(res);
+      return new LogoutResponse("OK");
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED, "", "UNAUTHORIZED")
