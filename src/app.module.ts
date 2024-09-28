@@ -1,14 +1,17 @@
-import { MiddlewareConsumer, Module, NestModule, Scope } from '@nestjs/common';
-import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { LoggingMiddleware } from '@middlewares/logging/logging.middleware';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { SupabaseModule } from './modules/services/supabase/supabase.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { FilesModule } from './modules/files/files.module';
-import { CryptographyModule } from './modules/cryptography/cryptography.module';
-import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { DecryptPipe } from '@pipes/decrypt/decrypt.pipe';
+import { SupabaseModule } from '@root/src/services/supabase/supabase.module';
+import { AuthModule } from './contexts/application/auth/auth.module';
+import { CryptographyModule } from './contexts/application/cryptography/cryptography.module';
+import { FilesModule } from './contexts/application/files/files.module';
+import { PrismaModule } from './services/prisma/prisma.module';
+import { PrismaService } from './services/prisma/prisma.service';
 
+@Global()
 @Module({
 
   imports: [
@@ -21,10 +24,12 @@ import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
         limit: 20,
       }
     ]),
+    PrismaModule,
     SupabaseModule,
     AuthModule,
     FilesModule,
     CryptographyModule,
+    PrismaModule,
   ],
   providers: [
     {
@@ -34,12 +39,16 @@ import { DecryptPipe } from './pipes/decrypt/decrypt.pipe';
     {
       provide: APP_PIPE,
       useClass: DecryptPipe,
-    }
+    },
+    PrismaService,
   ],
+
+  exports: [
+
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggingMiddleware).forRoutes("*");
   }
-
 }

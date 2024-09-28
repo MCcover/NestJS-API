@@ -1,13 +1,14 @@
-import { ArgumentMetadata, BadRequestException, HttpStatus, Injectable, Type, ValidationError, ValidationPipe } from '@nestjs/common';
-import { ValidationOptions } from 'class-validator';
-import { ErrorResponse } from 'src/common/responses/error.response';
+import { Injectable, ValidationError, ValidationPipe } from '@nestjs/common';
+import { ErrorResponse } from '@common/responses/error.response';
+import { InternalValidationError } from './validation.error';
 
 @Injectable()
 export class ErrorValidationPipe extends ValidationPipe {
+
   createExceptionFactory(): (validationErrors?: ValidationError[]) => ErrorResponse {
     return (validationErrors: ValidationError[] = []) => {
       const messages = this.flattenValidationErrors(validationErrors);
-      return new ErrorResponse(HttpStatus.BAD_REQUEST, 'Validation Error', messages);
+      throw new InternalValidationError(messages);
     };
   }
 

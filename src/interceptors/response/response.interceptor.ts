@@ -1,34 +1,23 @@
 import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, catchError, map } from 'rxjs';
-import { ErrorResponse } from 'src/common/responses/error.response';
-import { SuccessResponse } from 'src/common/responses/success.response';
+import { SuccessResponse } from '@common/responses/success.response';
+import { Response } from 'express';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
+    const response = ctx.getResponse<Response>();
 
     return next.handle().pipe(
       map((data) => {
-        if (data instanceof ErrorResponse) {
-          var errorResponse = data as ErrorResponse;
-
-          response.status(errorResponse.statusCode).json(data);
-        } else {
+        if (!response.headersSent) {
           response.status(HttpStatus.OK).json(new SuccessResponse(HttpStatus.OK, "", data));
         }
+        return data;
       }),
       catchError((error) => {
-        if (error instanceof ErrorResponse) {
-          var errorResponse = error as ErrorResponse;
-
-          response.status(errorResponse.statusCode).json(errorResponse);
-        } else {
-          response.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .json(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", error.message));
-        }
-        throw "Error";
+        throw error;
       })
     );
   }

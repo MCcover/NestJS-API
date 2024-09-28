@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Environment } from './config/environment/environment';
+import { Environment } from '@config/environment/environment';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { ErrorValidationPipe } from './pipes/errorValidation/errorValidation.pipe';
-import { ResponseInterceptor } from './interceptors/response/response.interceptor';
+import { ErrorValidationPipe } from '@pipes/errorValidation/errorValidation.pipe';
+import { ResponseInterceptor } from '@interceptors/response/response.interceptor';
+import { ErrorFilter } from './filters/error/error.filter';
 
 
 require('dotenv').config();
@@ -15,6 +16,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  app.useGlobalFilters(new ErrorFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.useGlobalPipes(
@@ -33,11 +35,8 @@ async function bootstrap() {
 
   app.use(helmet());
 
-
-
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('My API Description')
+    .setTitle('Coleccionalo Ya API')
     .setVersion(Environment.Instance.VERSION)
     .addBearerAuth(
       {

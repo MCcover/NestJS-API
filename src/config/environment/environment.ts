@@ -1,3 +1,5 @@
+import { version } from '@root/package.json';
+
 export class Environment {
 
     private static instance: Environment;
@@ -21,8 +23,9 @@ export class Environment {
     public JWT_SECRET: string;
 
     constructor() {
+        this.VERSION = version;
+
         this.PORT = parseInt(process.env.PORT);
-        this.VERSION = process.env.VERSION;
 
         this.JWT_SECRET = process.env.JWT_SECRET;
 
